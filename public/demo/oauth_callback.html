@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/image/favicon.ico" />
+    <title>Wechat-Public Callback Demo</title>
+</head>
+<body>
+
+<script>
+	const getParameter = (name) => {
+		const url = location.href;
+		let start = url.indexOf('?')+1;
+		if (start === 0) {
+			return '';
+		}
+		let value = '';
+		const queryString = url.substring(start);
+		const paraNames = queryString.split('&');
+		for (let i=0; i<paraNames.length; i++) {
+			const str = paraNames[i];
+			start = str.indexOf('=');
+			let parameterName = str;
+			if (start !== -1) {
+				parameterName = str.substring(0,start);
+			}
+
+			if (name === parameterName) {
+				start = str.indexOf('=');
+				if (start !== -1) {
+					value = str.substring(start+1);
+				}
+			}
+		}
+		return value;
+	};
+
+	const store = (obj) => {
+		localStorage.setItem('local-user', JSON.stringify(obj));
+    };
+
+	window.onload = function() {
+		const openid = getParameter('openid');
+		const nickname = getParameter('nickname');
+		const avatar = getParameter('avatar');
+		const sex = getParameter('sex');
+		const expire = getParameter('expire');
+
+		if(!openid || !expire) {
+			return alert('invalid callback params');
+        }
+
+		console.log(openid, nickname, avatar, sex, expire);
+
+		store({
+            openid,
+            nickname,
+            avatar,
+            sex,
+            expire
+        });
+
+
+    }
+</script>
+</body>
+</html>
